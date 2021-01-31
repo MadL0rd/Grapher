@@ -9,6 +9,7 @@ import java.util.*;
 
 public class Language {
     public static String GRAPHER;
+    public static String CLIENT;
     //settings
     public static String DISCRETIZATION;
     public static String FEELS_TIME;
