@@ -29,6 +29,7 @@ public class MainPanel extends Screen {
     private final GraphicsView graphicsView;
     private final ModelUpdater updater;
     private final Point mousePosition;
+    private final int titleHeight = 50;
     private int height;
     private int resizeType;
     private final ElementsList graphics;
@@ -50,7 +51,12 @@ public class MainPanel extends Screen {
 
         btn_help.addActionListener((e) -> updater.getSupportFrameManager().openHelperFrame());
 
-        graphics = new ElementsList(0, 0, updater::addVRemove, updater::startSettings, this::onTextElementCreate);
+        JLabel title = new JLabel("Client", SwingConstants.CENTER);
+        title.setFont(new Font("arial", Font.PLAIN, 28));
+        title.setBounds(0,0,TextElement.WIDTH, titleHeight);
+        add(title);
+
+        graphics = new ElementsList(0, titleHeight, updater::addVRemove, updater::startSettings, this::onTextElementCreate);
         graphics.setName(Language.GRAPHICS);
         graphics.addTo(this);
         updater.setList(graphics);
@@ -94,7 +100,7 @@ public class MainPanel extends Screen {
     }
 
     public void setGraphicsHeight() {
-        height = graphics.getHeight();
+        height = graphics.getHeight() + titleHeight;
         height += OFFSET;
         functions.setBounds(0, height);
         height += 2 * OFFSET + functions.FUNC_HEIGHT;
