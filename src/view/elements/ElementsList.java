@@ -1,5 +1,6 @@
 package view.elements;
 
+import UDP.UdpClient;
 import model.ViewElement;
 import model.help.TFunc;
 
@@ -11,7 +12,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-public class ElementsList extends ViewElement {
+public class ElementsList extends ViewElement implements UdpClient.MessageReceiveHandler {
     public static int DEFAULT_MAX_SIZE = 10;
     public static int OFFSET = 5;
     private static final int NAME_HEIGHT = 30;
@@ -50,9 +51,13 @@ public class ElementsList extends ViewElement {
         state.setEditable(false);
         state.setFont(new Font("arial", Font.PLAIN, 12));
         btn_make_element.addActionListener((e)->{
-            addElement();
-            setBounds(pos.x, pos.y);
-            sizeChanged.actionPerformed(new ActionEvent(0, elements.size() - 1, "add"));
+            String result = JOptionPane.showInputDialog("Enter function to send it to server", "x^2");
+            System.out.println(result);
+            try {
+                UdpClient.shared.sendMessage(result);
+            } catch (Exception exception) {
+                System.out.println("Send function error");
+            }
         });
         btn_move_up = new JButton("˄");
         btn_move_down = new JButton("˅");
@@ -60,6 +65,8 @@ public class ElementsList extends ViewElement {
         btn_move_down.addActionListener((e)->move(1));
         state_offset = OFFSET;
         setBounds(x,y);
+
+        UdpClient.shared.messageReceiveHandler = this;
     }
     public static boolean checkValidCount(int graphics_max_count){
         return graphics_max_count > 1 && graphics_max_count < 301;
@@ -150,8 +157,9 @@ public class ElementsList extends ViewElement {
         }
         setBounds(pos.x, pos.y);
     }
-    public void addElement(){
+    public void addElement(String startFunction){
         TextElement e = new TextElement();
+        e.setText(startFunction);
         e.addRemoveListener((e2)->{
             int id = elements.indexOf(e);
             elements.remove(id);
@@ -195,5 +203,15 @@ public class ElementsList extends ViewElement {
     }
     public int getMAX_SIZE() {
         return MAX_SIZE;
+    }
+
+    public void receiveMessage(String messageText, String sender) {
+        clear();
+        String[] graphs = messageText.split("\n");
+        for (int i = 0; i < graphs.length - 1; i++) {
+            addElement(graphs[i]);
+            setBounds(pos.x, pos.y);
+            sizeChanged.actionPerformed(new ActionEvent(0, elements.size() - 1, "add"));
+        }
     }
 }

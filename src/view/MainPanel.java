@@ -1,5 +1,6 @@
 package view;
 
+import UDP.UdpClient;
 import calculator2.calculator.Parser;
 import framesLib.screenables.InternalPanel;
 import model.Language;
@@ -29,9 +30,10 @@ public class MainPanel extends Screen {
     private final GraphicsView graphicsView;
     private final ModelUpdater updater;
     private final Point mousePosition;
-    private final int titleHeight = 50;
+    private final int titleHeight = 70;
     private int height;
     private int resizeType;
+    private final JButton chooseServerButton;
     private final ElementsList graphics;
     private final CalculatorView calculator;
     private final FunctionsView functions;
@@ -53,8 +55,18 @@ public class MainPanel extends Screen {
 
         JLabel title = new JLabel("Client", SwingConstants.CENTER);
         title.setFont(new Font("arial", Font.PLAIN, 28));
-        title.setBounds(0,0,TextElement.WIDTH, titleHeight);
+        title.setBounds(0,0, TextElement.WIDTH, 40);
         add(title);
+
+        chooseServerButton = new JButton("Server: "+ UdpClient.shared.getServerAddress());
+        chooseServerButton.setBounds(5,40, TextElement.WIDTH - 5, 20);
+        add(chooseServerButton);
+        chooseServerButton.addActionListener((e)->{
+            String result = JOptionPane.showInputDialog("Enter server ip address", UdpClient.shared.getServerAddress());
+            UdpClient.shared.setNewServerAddress(result);
+            chooseServerButton.setText("Server: "+ UdpClient.shared.getServerAddress());
+            System.out.println(result);
+        });
 
         graphics = new ElementsList(0, titleHeight, updater::addVRemove, updater::startSettings, this::onTextElementCreate);
         graphics.setName(Language.GRAPHICS);

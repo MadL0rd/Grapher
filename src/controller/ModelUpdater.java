@@ -132,7 +132,7 @@ public class ModelUpdater {
         }
         graphics.add(gr);
         gr.name = name;
-        list.addElement();
+        list.addElement("");
         TextElement e = list.getElements().get(list.getElements().size() - 1);
         e.setColor(color);
         e.addTextChangedListener((e1) -> calculator.recalculate());
