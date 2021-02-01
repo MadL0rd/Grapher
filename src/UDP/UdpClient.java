@@ -65,15 +65,17 @@ public class UdpClient {
         }
 
         private void configure() throws Exception {
+            Thread.sleep(3000);
             while (true) {
                 try {
-                    Thread.sleep(secondsToSleep);
-
                     DatagramSocket socket = new DatagramSocket();
                     InetAddress ipAddress = InetAddress.getByName(ipBroadcast);
                     byte[] messageBuffer = internalMessage.getBytes("UTF-8");
                     DatagramPacket packet = new DatagramPacket(messageBuffer, messageBuffer.length, ipAddress, portServer);
                     socket.send(packet);
+
+                    Thread.sleep(secondsToSleep);
+
                 } catch (Exception exception) {}
             }
         }
