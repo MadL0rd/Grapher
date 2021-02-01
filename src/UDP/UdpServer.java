@@ -75,6 +75,15 @@ public class UdpServer {
                 if (messageReceiveHandler != null) {
                     messageReceiveHandler.receiveMessage(messageText, clientAddress.toString());
                 }
+            } else {
+                // Send current state to new client
+                try {
+                    Client client = new Client(clientAddress);
+                    client.sendMessage(systemStateLastMessage);
+                } catch (Exception e) {
+                    System.out.println("Error msg send");
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -106,11 +115,5 @@ public class UdpServer {
         }
         Client client = new Client(clientAddress);
         clients.add(client);
-        try {
-            client.sendMessage(systemStateLastMessage);
-        } catch (Exception e) {
-            System.out.println("Error msg send");
-            e.printStackTrace();
-        }
     }
 }
