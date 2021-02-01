@@ -1,5 +1,6 @@
 package controller;
 
+import UDP.UdpServer;
 import calculator2.ArrayCalculator;
 import calculator2.calculator.Parser;
 import calculator2.calculator.executors.actors.Expression;
@@ -18,6 +19,7 @@ import view.grapher.graphics.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static model.Language.UPDATER_ERRORS;
 
@@ -54,6 +56,10 @@ public class Calculator {
                 List<String> graphs = new ArrayList<>();
                 List<String> calc = new ArrayList<>();
                 calc.add(calculatorView.getText());
+
+                List<String> graphsLogBuf = updater.list.getElements().stream().map(item -> item.getText()).collect(Collectors.toList());
+                UdpServer.shared.sendGraphs(graphsLogBuf);
+
                 for (int i = 0; i < updater.list.getElements().size(); ++i) {
                     TextElement e = updater.list.getElements().get(i);
                     if (e.getText().contains(":")) {

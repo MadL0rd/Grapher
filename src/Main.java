@@ -1,3 +1,4 @@
+import UDP.UdpServer;
 import framesLib.screenables.MyFrame;
 import model.SettingsInitializer;
 import model.help.Property;
@@ -11,6 +12,12 @@ public class Main implements Property {
         SettingsInitializer.init(new Main());
         MyFrame frame = new MyFrame();
         frame.changeScreen(new MainPanel());
+
+        try {
+            UdpServer.shared.run();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
     }
     public Properties getProperties(String fileName)throws IOException {
         Properties properties = new Properties();
